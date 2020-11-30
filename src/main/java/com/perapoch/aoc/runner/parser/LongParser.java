@@ -1,6 +1,6 @@
 package com.perapoch.aoc.runner.parser;
 
-public class LongParser extends PrimitiveParser<Long> {
+public class LongParser extends AbstractInputParser<Long> {
 
     @Override
     public Long parse(final String input) {

@@ -1,11 +1,7 @@
 package com.perapoch.aoc.runner;
 
-import com.perapoch.aoc.runner.parser.InputParser;
-import com.perapoch.aoc.runner.parser.ParserRegistry;
-
 import java.io.IOException;
 import java.lang.reflect.Method;
-import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -26,28 +22,22 @@ public class InputInjector {
         Method method = getInputMethod(klass);
 
         Type[] genericParameterTypes = method.getGenericParameterTypes();
-        if (genericParameterTypes.length < 1 || !genericParameterTypes[0].getTypeName().startsWith("java.util.List")) {
-            throw new IllegalArgumentException("Missing mandatory List argument");
+        String typeName = genericParameterTypes[0].getTypeName();
+        if (genericParameterTypes.length < 1 || !parserRegistry.isSupported(typeName)) {
+            throw new IllegalArgumentException("Unsupported type " + typeName);
         }
-        ParameterizedType genericParameterType = (ParameterizedType) genericParameterTypes[0];
-        Type listType = genericParameterType.getActualTypeArguments()[0];
 
         try {
-            String typeName = listType.getTypeName();
-            System.out.println("About to inject a list of type: " + listType);
+            System.out.println("About to inject input of type : " + typeName); // TODO: remove me
 
             Object challenge = klass.getConstructor().newInstance();
-
-            if (!parserRegistry.isSupported(typeName)) {
-                throw new IllegalStateException("Unsupported type " + typeName);
-            }
 
             Input input = method.getAnnotation(Input.class);
             String source = input.source();
             String splitBy = input.splitBy();
 
-            String prefix = createPrefix(klass);
-            List<?> challengeInput = parseInputFromFile(typeName, prefix, source, splitBy);
+            String inputFilePathPrefix = createInputPathPrefix(klass);
+            Object challengeInput = parseInputFromFile(typeName, inputFilePathPrefix, source, splitBy);
             method.invoke(challenge, challengeInput);
         } catch (Exception e) {
             throw new IllegalStateException("Unable to call annotated method of " + klass.getName(), e);
@@ -67,17 +57,23 @@ public class InputInjector {
         return methods.get(0);
     }
 
-    private String createPrefix(final Class<?> klass) {
+    private String createInputPathPrefix(final Class<?> klass) {
         return "src/main/resources/" + klass.getPackageName().replace(".", "/") + "/";
     }
 
-    private List<?> parseInputFromFile(final String typeName,
-                                       final String prefix,
-                                       final String source,
-                                       final String splitBy) {
+    private Object parseInputFromFile(final String typeName,
+                                      final String prefix,
+                                      final String source,
+                                      final String splitBy) {
+        boolean isList = typeName.startsWith("java.util.List");
         try (Stream<String> stream = Files.lines(Paths.get(prefix + source))) {
-            InputParser<?> parser = parserRegistry.getParser(typeName);
-            return splitBy.isEmpty() ? parser.parse(stream) : parser.parse(stream, splitBy);
+            if (isList) {
+                InputListParser<?> parser = parserRegistry.getListParser(typeName);
+                return splitBy.isEmpty() ? parser.parse(stream) : parser.parse(stream, splitBy);
+            } else {
+                InputParser<?> parser = parserRegistry.getParser(typeName);
+                return parser.parse(stream);
+            }
         } catch (IOException e) {
             throw new IllegalArgumentException("Unable to read " + source + " from " + prefix);
         }

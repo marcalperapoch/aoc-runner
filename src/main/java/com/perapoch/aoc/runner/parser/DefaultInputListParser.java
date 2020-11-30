@@ -1,11 +1,19 @@
 package com.perapoch.aoc.runner.parser;
 
+import com.perapoch.aoc.runner.InputListParser;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public abstract class PrimitiveParser<T> implements InputParser<T> {
+public class DefaultInputListParser<T> implements InputListParser<T> {
+
+    private final AbstractInputParser<T> parser;
+
+    public DefaultInputListParser(final AbstractInputParser<T> parser) {
+        this.parser = parser;
+    }
 
     @Override
     public List<T> parse(final Stream<String> input) {
@@ -21,6 +29,8 @@ public abstract class PrimitiveParser<T> implements InputParser<T> {
                     .collect(Collectors.toList());
     }
 
-    public abstract T parse(final String input);
+    T parse(final String input) {
+        return parser.parse(input);
+    }
 
 }

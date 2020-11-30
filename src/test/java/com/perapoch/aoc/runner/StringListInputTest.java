@@ -7,7 +7,7 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class StringInputTest {
+public class StringListInputTest {
 
     public static final class LineSeparatedStrings {
 
