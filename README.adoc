@@ -1,0 +1,73 @@
+= Advent of Code Runner
+
+Simple Java input parser for the https://adventofcode.com/[Advent of Code] challenges.
+
+== Installation
+
+. Clone this project
+. Execute
++
+----
+./gradlew publishToMavenLocal
+----
+. Add the following dependency to your project's `build.gradle`
++
+----
+implementation 'com.perapoch.aoc:aoc-runner:+'
+----
+. That's it!
+
+== Usage
+
+The only *requirement* to use `aoc-runner` is that you have a method annotated with the `@Input` annotation and a
+single argument of type `List` in the class where you want the input to be injected.
+
+Example:
+[source, java]
+----
+package com.perapoch.aoc.day1;
+
+public class AoCDay1 {
+
+    @Input(source = "input1.txt")
+    public void run(List<Integer> input) {
+        // solve the challenge
+    }
+
+    public static void main() {
+        ChallengeRunner.run(AoCDay1.class);
+    }
+}
+----
+
+Once the `main` method is executed, the `ChallengeRunner` will look for a file named `input1.txt` in a *resource* folder
+under the same package structure.
+
+----
+src
+|-- main
+    |-- java
+    |   |-- com.perapoch.aoc.day1
+    |       |-- AoCDay1.java
+    |
+    |-- resources
+    |   |-- com.perapoch.aoc.day1
+    |       |-- input1.txt
+----
+
+`ChallengeRunner` will automatically *parse* the file's content to create a new `List<Integer>` and call the `run`
+method on the `AoCDay1` class with it.
+
+=== Supported argument types
+
+Supported argument types are:
+
+* `List<Integer>`
+* `List<String>`
+* `List<Character>`
+* `List<Long>`
+* `List<Float>`
+* `List<Double>`
+* `List<List<T>>`: where `T` is any of the types above, for instance: `List<List<Integer>>`.
+
+=== Supported file formats
