@@ -27,7 +27,7 @@ public class IntegersTest {
 
     public static final class Multiline {
 
-        @Input(source = "ints_multiline.txt")
+        @Input(source = "multiline_ints.txt")
         public void run(List<Integer> input) {
             assertThat(input).hasSize(100);
         }
@@ -35,7 +35,7 @@ public class IntegersTest {
 
     public static final class Delimited {
 
-        @Input(source = "delimited-ints.txt", splitBy = ",")
+        @Input(source = "delimited_ints.txt", splitBy = ",")
         public void run(List<Integer> input) {
             assertThat(input).hasSize(424);
         }
@@ -43,7 +43,7 @@ public class IntegersTest {
 
     public static final class MultilineDelimited {
 
-        @Input(source = "multiline_delimited_intst.txt", splitBy = ", ")
+        @Input(source = "multiline_delimited_ints.txt", splitBy = ", ")
         public void run(List<List<Integer>> input) {
             assertThat(input).hasSize(50);
             input.forEach(pairOfInts -> assertThat(pairOfInts).hasSize(2));
@@ -64,19 +64,19 @@ public class IntegersTest {
 
     @Test
     @DisplayName("Should parse a line-separated list of integers")
-    void lineSeparatedIntegerListTest() {
+    void multilineTest() {
         ChallengeRunner.run(Multiline.class);
     }
 
     @Test
     @DisplayName("Should parse a comma-separated list of integers")
-    void commaSeparatedIntegerListTest() {
+    void delimitedTest() {
         ChallengeRunner.run(Delimited.class);
     }
 
     @Test
     @DisplayName("Should parse a line-separated list of comma-separated list of integers")
-    void lineSeparatedCommaSeparatedIntegerListTest() {
+    void multilineDelimitedTest() {
         ChallengeRunner.run(MultilineDelimited.class);
     }
 
