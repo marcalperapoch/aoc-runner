@@ -22,8 +22,11 @@ public class InputInjector {
         Method method = getInputMethod(klass);
 
         Type[] genericParameterTypes = method.getGenericParameterTypes();
+        if (genericParameterTypes.length != 1) {
+            throw new IllegalStateException("Method " + method.getName() + " must have a single argument");
+        }
         String typeName = genericParameterTypes[0].getTypeName();
-        if (genericParameterTypes.length < 1 || !parserRegistry.isSupported(typeName)) {
+        if (!parserRegistry.isSupported(typeName)) {
             throw new IllegalArgumentException("Unsupported type " + typeName);
         }
 
