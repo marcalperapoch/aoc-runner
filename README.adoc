@@ -15,6 +15,7 @@ Simple Java input parser for the https://adventofcode.com/[Advent of Code] chall
 ----
 implementation 'com.perapoch.aoc:aoc-runner:+'
 ----
+Note: you will need `mavenLocal()` added in your `repositories {}`.
 . That's it!
 
 == Usage
@@ -62,12 +63,46 @@ method on the `AoCDay1` class with it.
 
 Supported argument types are:
 
-* `List<Integer>`
-* `List<String>`
-* `List<Character>`
-* `List<Long>`
-* `List<Float>`
-* `List<Double>`
-* `List<List<T>>`: where `T` is any of the types above, for instance: `List<List<Integer>>`.
+* Primitive types: `int, long, char`
+* Boxed primitive types: `Integer, Long, Character`
+* `List<T>` where `T` is any of the boxed primitive types. Example: `List<Integer>`.
+* `List<List<T>>`: where `T` is any of the boxed primitive types. Example: `List<List<Integer>>`.
 
 === Supported file formats
+
+Input files can have input in one of the following formats:
+
+* Single element
++
+----
+1990
+----
+* Multiline elements
++
+----
+a
+b
+c
+d
+----
+* Delimited list of elements
++
+----
+1,2,3,4
+----
+* Multiline delimited list of elements
++
+----
+x = 4
+y = 9
+z = x + y
+----
+
+Delimited lists are supported through the `splitBy` parameter in the `@Input` annotation. Example:
+[source, Java]
+----
+@Input(source = "delimited_ints.txt", splitBy = ",")
+public void run(List<Integer> input) {
+    System.out.println(input); // will print [1,2,3,4]
+}
+----
