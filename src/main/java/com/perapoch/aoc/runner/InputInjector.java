@@ -13,12 +13,18 @@ import java.util.stream.Stream;
 public class InputInjector {
 
     private final ParserRegistry parserRegistry;
+    private final InputProvider inputProvider;
 
-    public InputInjector(final ParserRegistry parserRegistry) {
+    private InputInjector(final ParserRegistry parserRegistry, final InputProvider inputProvider) {
         this.parserRegistry = parserRegistry;
+        this.inputProvider = inputProvider;
     }
 
-    public void inject(final Class<?> klass) {
+    public static InputInjector using(final ParserRegistry parserRegistry, final InputProvider inputProvider) {
+        return new InputInjector(parserRegistry, inputProvider);
+    }
+
+    public void injectInputAndRun(final Class<?> klass) {
         Method method = getInputMethod(klass);
 
         Type[] genericParameterTypes = method.getGenericParameterTypes();
@@ -39,8 +45,7 @@ public class InputInjector {
             String source = input.source();
             String splitBy = input.splitBy();
 
-            String inputFilePathPrefix = createInputPathPrefix(klass);
-            Object challengeInput = parseInputFromFile(typeName, inputFilePathPrefix, source, splitBy);
+            Object challengeInput = parseInput(klass, typeName, source, splitBy);
             method.invoke(challenge, challengeInput);
         } catch (Exception e) {
             throw new IllegalStateException("Unable to call annotated method of " + klass.getName(), e);
@@ -60,16 +65,9 @@ public class InputInjector {
         return methods.get(0);
     }
 
-    private String createInputPathPrefix(final Class<?> klass) {
-        return "src/main/resources/" + klass.getPackageName().replace(".", "/") + "/";
-    }
-
-    private Object parseInputFromFile(final String typeName,
-                                      final String prefix,
-                                      final String source,
-                                      final String splitBy) {
+    private Object parseInput(final Class<?> klass, final String typeName, final String source, final String splitBy) {
         boolean isList = typeName.startsWith("java.util.List");
-        try (Stream<String> stream = Files.lines(Paths.get(prefix + source))) {
+        try (Stream<String> stream = inputProvider.get(klass, source)) {
             if (isList) {
                 InputListParser<?> parser = parserRegistry.getListParser(typeName);
                 return splitBy.isEmpty() ? parser.parse(stream) : parser.parse(stream, splitBy);
@@ -78,7 +76,7 @@ public class InputInjector {
                 return parser.parse(stream);
             }
         } catch (IOException e) {
-            throw new IllegalArgumentException("Unable to read " + source + " from " + prefix);
+            throw new IllegalArgumentException("Unable to read " + source + " for " + klass.getName());
         }
     }
 }

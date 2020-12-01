@@ -7,7 +7,7 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class IntegersTest {
+public class IntegerSupportTest {
 
     public static final class SingleInteger {
 

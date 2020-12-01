@@ -5,7 +5,6 @@ import java.util.Map;
 
 public class ParserRegistry {
 
-
     private final Map<String, InputParser<?>> parsers;
     private final Map<String, InputListParser<?>> listParsers;
 

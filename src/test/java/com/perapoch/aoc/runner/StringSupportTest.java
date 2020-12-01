@@ -7,7 +7,7 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class StringsTest {
+public class StringSupportTest {
 
     public static final class Single {
 
