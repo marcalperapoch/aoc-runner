@@ -19,6 +19,8 @@ public class ChallengeRunner {
         register(parserRegistry, Integer.class, int.class, new IntegerParser());
         register(parserRegistry, Long.class, long.class, new LongParser());
         register(parserRegistry, Character.class, char.class, new CharacterParser());
+        register(parserRegistry, Float.class, float.class, new FloatParser());
+        register(parserRegistry, Double.class, double.class, new DoubleParser());
         register(parserRegistry, String.class, new StringParser());
         return parserRegistry;
     }

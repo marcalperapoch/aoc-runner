@@ -66,10 +66,11 @@ method on the `AoCDay1` class with it.
 
 Supported argument types are:
 
-* Primitive types: `int, long, char`
-* Boxed primitive types: `Integer, Long, Character`
-* `List<T>` where `T` is any of the boxed primitive types. Example: `List<Integer>`.
-* `List<List<T>>`: where `T` is any of the boxed primitive types. Example: `List<List<Integer>>`.
+* Primitive types: `int, long, char, float, double`
+* Boxed primitive types: `Integer, Long, Character, Float, Double`
+* `String`
+* `List<T>` where `T` is any of the boxed primitive types or `String`. Example: `List<Integer>`.
+* `List<List<T>>`: where `T` is any of the boxed primitive types or `String`. Example: `List<List<Integer>>`.
 
 === Supported file formats
 
