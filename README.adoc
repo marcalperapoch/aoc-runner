@@ -21,7 +21,10 @@ Note: you will need `mavenLocal()` added in your `repositories {}`.
 == Usage
 
 The only *requirement* to use `aoc-runner` is that you have a method annotated with the `@Input` annotation and a
-single argument of type `List` in the class where you want the input to be injected.
+single argument of any supported type (see the list below).
+
+After invoking the `ChallengeRunner::run` the input file you specified as `source` will be parsed and injected to your
+`@Input` annotated method.
 
 Example:
 [source, java]
