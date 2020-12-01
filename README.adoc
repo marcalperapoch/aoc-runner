@@ -70,7 +70,7 @@ Supported argument types are:
 
 === Supported file formats
 
-Input files can have input in one of the following formats:
+Input files can have input in any of the following formats and contain any of the supported types listed above:
 
 * Single element
 +
