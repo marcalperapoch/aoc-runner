@@ -1,0 +1,3 @@
++ Add support for primitive arrays
++ Add support for Sets and other collection types
++ Consider regex support on splitBy

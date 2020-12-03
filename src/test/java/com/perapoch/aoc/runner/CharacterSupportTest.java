@@ -52,13 +52,13 @@ public class CharacterSupportTest {
 
     @Test
     @DisplayName("Should parse a single char input as Character")
-    void singleIntegerInput() {
+    void singleCharacterInput() {
         ChallengeRunner.run(SingleCharacter.class);
     }
 
     @Test
     @DisplayName("Should parse a single char input as char")
-    void singleIntInput() {
+    void singleCharInput() {
         ChallengeRunner.run(SingleChar.class);
     }
 

@@ -1,4 +1,4 @@
-package com.perapoch.aoc.runner;
+package com.perapoch.aoc.runner.parser;
 
 import java.util.List;
 import java.util.stream.Stream;

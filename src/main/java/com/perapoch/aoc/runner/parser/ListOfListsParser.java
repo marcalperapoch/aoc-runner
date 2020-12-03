@@ -1,7 +1,5 @@
 package com.perapoch.aoc.runner.parser;
 
-import com.perapoch.aoc.runner.InputListParser;
-
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;

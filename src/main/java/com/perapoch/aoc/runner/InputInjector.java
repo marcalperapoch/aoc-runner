@@ -1,10 +1,11 @@
 package com.perapoch.aoc.runner;
 
+import com.perapoch.aoc.runner.parser.InputListParser;
+import com.perapoch.aoc.runner.parser.InputParser;
+
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -15,16 +16,13 @@ public class InputInjector {
     private final ParserRegistry parserRegistry;
     private final InputProvider inputProvider;
 
-    private InputInjector(final ParserRegistry parserRegistry, final InputProvider inputProvider) {
+    InputInjector(final ParserRegistry parserRegistry, final InputProvider inputProvider) {
         this.parserRegistry = parserRegistry;
         this.inputProvider = inputProvider;
     }
 
-    public static InputInjector using(final ParserRegistry parserRegistry, final InputProvider inputProvider) {
-        return new InputInjector(parserRegistry, inputProvider);
-    }
-
-    public void injectInputAndRun(final Class<?> klass) {
+    public void injectInputAndRun(final Object challenge) {
+        Class<?> klass = challenge.getClass();
         Method method = getInputMethod(klass);
 
         Type[] genericParameterTypes = method.getGenericParameterTypes();
@@ -38,8 +36,6 @@ public class InputInjector {
 
         try {
             System.out.println("About to inject input of type : " + typeName); // TODO: remove me
-
-            Object challenge = klass.getConstructor().newInstance();
 
             Input input = method.getAnnotation(Input.class);
             String source = input.source();
