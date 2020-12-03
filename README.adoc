@@ -4,6 +4,9 @@ Simple Java input parser for the https://adventofcode.com/[Advent of Code] chall
 
 == Installation
 
+This project requires **Java 11** or higher. If you still on a lower Java version, maybe it's a good time to consider
+using something such https://github.com/jenv/jenv[jenv] that allows you to easily change your Java environment :).
+
 . Clone this project
 . Execute
 +
@@ -33,7 +36,7 @@ package com.perapoch.aoc.day1;
 
 public class AoCDay1 {
 
-    @Input(source = "input1.txt")
+    @Input(source = "input.txt")
     public void run(List<Integer> input) {
         // solve the challenge
     }
@@ -66,11 +69,12 @@ method on the `AoCDay1` class with it.
 
 Supported argument types are:
 
-* Primitive types: `int, long, char, float, double`
-* Boxed primitive types: `Integer, Long, Character, Float, Double`
+* *Primitive types*: `int, long, char, float, double`
+* *Boxed primitive types*: `Integer, Long, Character, Float, Double`
+* *Custom*: yes, you can define your own type. See the <<README.adoc#Advanced usage,Advanced usage>> section for more info.
 * `String`
-* `List<T>` where `T` is any of the boxed primitive types or `String`. Example: `List<Integer>`.
-* `List<List<T>>`: where `T` is any of the boxed primitive types or `String`. Example: `List<List<Integer>>`.
+* `List<T>` where `T` is any of the boxed primitive types, `String` or a custom type. Example: `List<Integer>`.
+* `List<List<T>>`: where `T` is any of the boxed primitive types, `String` or a custom type. Example: `List<List<Integer>>`.
 
 === Supported file formats
 
@@ -110,3 +114,25 @@ public void run(List<Integer> input) {
     System.out.println(input); // will print [1,2,3,4]
 }
 ----
+
+=== Advanced usage
+
+For most of the challenges any of the types described above should be enough. However, there are times were using your
+own custom type can improve your code readability. To do that, you can use the `@CustomParser` annotation.
+
+[source, java]
+----
+@CustomParser()
+public Code parse(String line) {
+    String[] parts = line.split("#");
+    return new Code(parts[0], parts[1]);
+}
+
+@Input()
+public void run(List<Code> input) {
+    // solve the challenge
+}
+----
+
+As it can be deducted by the example above, using the `@CustomParser` annotation will set up a new parser that converts an input line
+to the custom type specified by the return type.
